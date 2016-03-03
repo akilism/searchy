@@ -21,22 +21,27 @@
          mappings (esi/create cluster index-name :mappings mappings)
          :else (esi/create cluster index-name))))))
 
-(defmethod insert [type cluster index-name doc key]
+(defn insert [type cluster index-name doc key]
+  "Inset a document into an index on a cluster.
+   type is the mapping type as a keyword.
+   doc is the document to insert.
+   key is the field in the map to use as a unique identifier from the document."
   (let [id (get-in doc [key])]
+    (println "Inserting: " (name type) ": " (:id doc))
     (esd/put cluster index-name (name type) id doc)))
 
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
+(defn create-vice-index
+  []
   (let [cluster (esr/connect "http://127.0.0.1:9200")
-        index-name "test0"
-        mapping-types {"person" {:properties {:username   {:type "string" :store "yes"}
-                                              :first-name {:type "string" :store "yes"}
-                                              :last-name  {:type "string"}
-                                              :age        {:type "integer"}
-                                              :title      {:type "string" :analyzer "snowball"}
-                                              :planet     {:type "string"}
-                                              :biography  {:type "string" :analyzer "snowball" :term_vector "with_positions_offsets"}}}}
-        doc {:username "happyjoe" :first-name "Joe" :last-name "Smith" :age 30 :title "Teh Boss" :planet "Earth" :biography "N/A"}]
-    (create-index cluster index-name {:settings {"number_of_shards" 1} :mappings mapping-types})
-    (insert :person cluster index-name doc :username)))
+        index-name "vice"
+        mapping-types {"article" {:properties {:title {:type "string" :store "yes"}
+                                               :id {:type "string" :store "yes"}
+                                               :body {:type "string"}
+                                               :slug {:type "string"}
+                                               :title-analyze {:type "string" :analyzer "snowball"}}}}]
+    (create-index cluster index-name)))
+
+(defn insert-articles [articles]
+  (let [cluster (esr/connect "http://127.0.0.1:9200")
+        index-name "vice"]
+    (map #(insert :article cluster index-name (assoc % :title-analyze (:title %)) :id) articles)))
