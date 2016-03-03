@@ -1,6 +1,6 @@
-# vice-search
+# search prototype
 
-FIXME
+beep
 
 ## Prerequisites
 
@@ -14,6 +14,4 @@ To start a web server for the application, run:
 
     lein ring server
 
-## License
 
-Copyright © 2016 FIXME
