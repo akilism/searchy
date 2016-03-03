@@ -3,6 +3,7 @@
             [compojure.route :as route]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [ring.middleware.json :as ring-json]
+            [ring.middleware.cors :as ring-cors]
             [ring.util.response :as rr]
             [vice-search.data.api-fetch :as api]
             [vice-search.cluster.management :as cluster]
@@ -36,4 +37,6 @@
 (def app
   (-> app-routes
       (wrap-defaults site-defaults)
+      (ring-cors/wrap-cors :access-control-allow-origin [#".*"]
+                           :access-control-allow-methods [:get :post :put :delete])
       (ring-json/wrap-json-response)))

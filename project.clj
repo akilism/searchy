@@ -4,8 +4,9 @@
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [compojure "1.4.0"]
-                 [ring/ring-defaults "0.1.5"]
                  [clojurewerkz/elastisch "2.2.1"]
+                 [ring/ring-defaults "0.1.5"]
+                 [ring-cors "0.1.7"]
                  [ring/ring-json "0.4.0"]
                  [clj-http "2.1.0"]
                  [cheshire "5.5.0"]]
