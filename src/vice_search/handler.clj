@@ -32,6 +32,8 @@
          (rr/response {:result cluster-response})))
   (GET "/search_articles.json" [q]
     (rr/response {:results (query/article-query q)}))
+  (GET "/search_topics.json" [q]
+    (rr/response {:results (query/topic-query q)}))
   (route/not-found "Not Found"))
 
 (def app
