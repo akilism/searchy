@@ -6,6 +6,7 @@
             [ring.util.response :as rr]
             [vice-search.data.api-fetch :as api]
             [vice-search.cluster.management :as cluster]
+            [vice-search.cluster.query :as query]
             [cheshire.core :as json]))
 
 (defn api-response-body [raw-response with-keywords]
@@ -18,15 +19,18 @@
   (GET "/api-test/articles.json" []
        (let [reply (api-response-body (api/api-get :articles) false)]
          (rr/response {:reply reply})))
+  (GET "/api-test/articles-all.json" []
+       (let [reply (api/api-get-all :articles)]
+         (rr/response {:reply reply})))
   (GET "/cluster-test/create.json" []
        (let [cluster-response (cluster/create-vice-index)]
          (rr/response {:result cluster-response})))
   (GET "/cluster-test/insert_articles.json" []
-       (let [api-response (api-response-body (api/api-get :articles) true)
-             cluster-response (cluster/insert-articles api-response)]
+       (let [articles (api/api-get-all :articles)
+             cluster-response (cluster/insert-articles articles)]
          (rr/response {:result cluster-response})))
-  (GET "/search.json" [q]
-    (rr/response {:results [{:id "test" :val q}]}))
+  (GET "/search_articles.json" [q]
+    (rr/response {:results (query/article-query q)}))
   (route/not-found "Not Found"))
 
 (def app
