@@ -13,7 +13,8 @@
    (when (not-exists? cluster index-name)
      (esi/create cluster index-name)))
   ([cluster index-name options]
-   (let [{[settings mappings] :keys} options]
+   (let [{:keys [mappings settings]} options]
+     (println mappings)
      (when (not-exists? cluster index-name)
        (cond
          (and settings mappings) (esi/create cluster index-name :settings settings :mappings mappings)
@@ -34,14 +35,42 @@
   []
   (let [cluster (esr/connect "http://127.0.0.1:9200")
         index-name "vice"
-        mapping-types {"article" {:properties {:title {:type "string" :store "yes"}
-                                               :id {:type "string" :store "yes"}
-                                               :body {:type "string"}
-                                               :slug {:type "string"}
-                                               :title-analyze {:type "string" :analyzer "snowball"}}}}]
-    (create-index cluster index-name)))
+        mapping-types {"articles" {:properties {:body {:type "string"}
+                                                :contributions {:properties {:id {:type "string" :index "not_analyzed"}
+                                                                             :contributor {:properties {:id {:type "string" :index "not_analyzed"}
+                                                                                                        :first_name {:type "string" :index "not_analyzed"}
+                                                                                                        :last_name {:type "string" :index "not_analyzed"}
+                                                                                                        :full_name {:type "string" :index "not_analyzed"}
+                                                                                                        :twitter_username {:type "string" :index "not_analyzed"}
+                                                                                                        :public_url {:type "string" :index "not_analyzed"}
+                                                                                                        :thumbnail_url {:type "string" :index "not_analyzed"}
+																												                                                :thumbnail_url_1_1 {:type "string" :index "not_analyzed"}
+																												                                                :thumbnail_url_2_3 {:type "string" :index "not_analyzed"}
+																												                                                :thumbnail_url_7_10 {:type "string" :index "not_analyzed"}
+																												                                                :thumbnail_url_10_3 {:type "string" :index "not_analyzed"}
+																												                                                :thumbnail_url_10_4 {:type "string" :index "not_analyzed"}
+																												                                                :thumbnail_url_16_9 {:type "string" :index "not_analyzed"}
+                                                                                                        :slug {:type "string" :index "not_analyzed"}}}}}
+                                                :id {:type "string" :index "not_analyzed"}
+                                                :locale {:type "string" :index "not_analyzed"}
+                                                :slug {:type "string" :index "not_analyzed"}
+                                                :summary {:type "string"}
+                                                :topics {:properties {:id {:type "string" :index "not_analyzed"}
+                                                                      :name {:type "string"}
+                                                                      :slug {:type "string" :index "not_analyzed"}}}
+                                                :title {:type "string"}
+                                                :title-analyze {:type "string" :analyzer "snowball"}
+                                                :thumbnail_url {:type "string" :index "not_analyzed"}
+                                                :thumbnail_url_1_1 {:type "string" :index "not_analyzed"}
+                                                :thumbnail_url_2_3 {:type "string" :index "not_analyzed"}
+                                                :thumbnail_url_7_10 {:type "string" :index "not_analyzed"}
+                                                :thumbnail_url_10_3 {:type "string" :index "not_analyzed"}
+                                                :thumbnail_url_10_4 {:type "string" :index "not_analyzed"}
+                                                :thumbnail_url_16_9 {:type "string" :index "not_analyzed"}
+                                                :url {:type "string" :index "not_analyzed"}}}}]
+    (create-index cluster index-name {:mappings mapping-types})))
 
 (defn insert-articles [articles]
   (let [cluster (esr/connect "http://127.0.0.1:9200")
         index-name "vice"]
-    (map #(insert :article cluster index-name (assoc % :title-analyze (:title %)) :id) articles)))
+    (map #(insert :articles cluster index-name (assoc % :title-analyze (:title %)) :id) articles)))

@@ -15,32 +15,25 @@
   [_ field query-term]
   {:term {field query-term}})
 
-(defn simple-query
-	[type field query-term]
+(defn query
+	[query-type type field query-term]
 	(let [cluster (esr/connect "http://127.0.0.1:9200")
 				index-name "vice"
-				response (esd/search cluster index-name (name type) :query (build-query :simple field query-term))
+				response (esd/search cluster index-name (name type) :query (build-query query-type field query-term))
 				total-hits (es-res/total-hits response)
 				hits (es-res/hits-from response)]
-		(println "Query: " query-term)
-  	(println "Total Hits: " total-hits)
-		hits))
-
-(defn term-query
-	[type field query-term]
-	(let [cluster (esr/connect "http://127.0.0.1:9200")
-				index-name "vice"
-				response (esd/search cluster index-name (name type) :query (build-query :term field query-term))
-				total-hits (es-res/total-hits response)
-				hits (es-res/hits-from response)]
-		(println "Query: " query-term)
+		(println "Query: " query-term " Field: " (name field))
   	(println "Total Hits: " total-hits)
 		hits))
 
 (defn article-query
   [query-term]
-  (simple-query :article :title query-term))
+  (query :simple :articles :title query-term))
 
 (defn topic-query
   [query-term]
-  (term-query :article :topics.name query-term))
+  (query :term :articles :topics.id query-term))
+
+(defn contributor-query
+  [query-term]
+  (query :term :articles :contributions.contributor.id query-term))

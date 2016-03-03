@@ -34,6 +34,8 @@
     (rr/response {:results (query/article-query q)}))
   (GET "/search_topics.json" [q]
     (rr/response {:results (query/topic-query q)}))
+   (GET "/search_contributors.json" [q]
+    (rr/response {:results (query/contributor-query q)}))
   (route/not-found "Not Found"))
 
 (def app
