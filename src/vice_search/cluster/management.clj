@@ -3,6 +3,9 @@
             [clojurewerkz.elastisch.rest.index :as esi]
             [clojurewerkz.elastisch.rest.document :as esd]))
 
+(def cluster-url "http://127.0.0.1:9200")
+(def index-name "vice")
+
 (def not-exists? (complement esi/exists?))
 
 (defn create-index
@@ -33,8 +36,7 @@
 
 (defn create-vice-index
   []
-  (let [cluster (esr/connect "http://127.0.0.1:9200")
-        index-name "vice"
+  (let [cluster (esr/connect cluster-url)
         mapping-types {"items" {:properties {:body {:type "string"}
           :channel {:properties {:id {:type "string" :index "not_analyzed"}
             :slug {:type "string" :index "not_analyzed"}}}
@@ -97,12 +99,6 @@
           :vms_id {:type "string" :index "not_analyzed"}}}}]
     (create-index cluster index-name {:mappings mapping-types})))
 
-; (defn insert-articles [articles]
-;   (let [cluster (esr/connect "http://127.0.0.1:9200")
-;         index-name "vice"]
-;     (map #(insert :articles cluster index-name (assoc % :title-analyze (:title %)) :id) articles)))
-
 (defn insert-items [items]
-  (let [cluster (esr/connect "http://127.0.0.1:9200")
-        index-name "vice"]
+  (let [cluster (esr/connect cluster-url)]
     (map #(insert :items cluster index-name (assoc % :title-analyze (:title %)) :id) items)))

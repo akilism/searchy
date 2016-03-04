@@ -5,6 +5,9 @@
 						[clojurewerkz.elastisch.query :as es-qry]
 						[clojurewerkz.elastisch.rest.response :as es-res]))
 
+(def cluster-url "http://127.0.0.1:9200")
+(def index-name "vice")
+
 (defmulti build-query (fn [type & _] type))
 
 (defmethod build-query :simple
@@ -17,8 +20,7 @@
 
 (defn query
 	[query-type type field query-term]
-	(let [cluster (esr/connect "http://127.0.0.1:9200")
-				index-name "vice"
+	(let [cluster (esr/connect cluster-url)
 				response (esd/search cluster index-name (name type) :query (build-query query-type field query-term) :size 100)
 				total-hits (es-res/total-hits response)
 				hits (es-res/hits-from response)]
