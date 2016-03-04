@@ -35,42 +35,74 @@
   []
   (let [cluster (esr/connect "http://127.0.0.1:9200")
         index-name "vice"
-        mapping-types {"articles" {:properties {:body {:type "string"}
-                                                :contributions {:properties {:id {:type "string" :index "not_analyzed"}
-                                                                             :contributor {:properties {:id {:type "string" :index "not_analyzed"}
-                                                                                                        :first_name {:type "string" :index "not_analyzed"}
-                                                                                                        :last_name {:type "string" :index "not_analyzed"}
-                                                                                                        :full_name {:type "string" :index "not_analyzed"}
-                                                                                                        :twitter_username {:type "string" :index "not_analyzed"}
-                                                                                                        :public_url {:type "string" :index "not_analyzed"}
-                                                                                                        :thumbnail_url {:type "string" :index "not_analyzed"}
-																												                                                :thumbnail_url_1_1 {:type "string" :index "not_analyzed"}
-																												                                                :thumbnail_url_2_3 {:type "string" :index "not_analyzed"}
-																												                                                :thumbnail_url_7_10 {:type "string" :index "not_analyzed"}
-																												                                                :thumbnail_url_10_3 {:type "string" :index "not_analyzed"}
-																												                                                :thumbnail_url_10_4 {:type "string" :index "not_analyzed"}
-																												                                                :thumbnail_url_16_9 {:type "string" :index "not_analyzed"}
-                                                                                                        :slug {:type "string" :index "not_analyzed"}}}}}
-                                                :id {:type "string" :index "not_analyzed"}
-                                                :locale {:type "string" :index "not_analyzed"}
-                                                :slug {:type "string" :index "not_analyzed"}
-                                                :summary {:type "string"}
-                                                :topics {:properties {:id {:type "string" :index "not_analyzed"}
-                                                                      :name {:type "string"}
-                                                                      :slug {:type "string" :index "not_analyzed"}}}
-                                                :title {:type "string"}
-                                                :title-analyze {:type "string" :analyzer "snowball"}
-                                                :thumbnail_url {:type "string" :index "not_analyzed"}
-                                                :thumbnail_url_1_1 {:type "string" :index "not_analyzed"}
-                                                :thumbnail_url_2_3 {:type "string" :index "not_analyzed"}
-                                                :thumbnail_url_7_10 {:type "string" :index "not_analyzed"}
-                                                :thumbnail_url_10_3 {:type "string" :index "not_analyzed"}
-                                                :thumbnail_url_10_4 {:type "string" :index "not_analyzed"}
-                                                :thumbnail_url_16_9 {:type "string" :index "not_analyzed"}
-                                                :url {:type "string" :index "not_analyzed"}}}}]
+        mapping-types {"items" {:properties {:body {:type "string"}
+          :channel {:properties {:id {:type "string" :index "not_analyzed"}
+            :slug {:type "string" :index "not_analyzed"}}}
+          :contributions {:properties {:id {:type "string" :index "not_analyzed"}
+            :contributor {:properties {:id {:type "string" :index "not_analyzed"}
+              :first_name {:type "string" :index "not_analyzed"}
+              :last_name {:type "string" :index "not_analyzed"}
+              :full_name {:type "string" :index "not_analyzed"}
+              :twitter_username {:type "string" :index "not_analyzed"}
+              :public_url {:type "string" :index "not_analyzed"}
+              :thumbnail_url {:type "string" :index "not_analyzed"}
+    					:thumbnail_url_1_1 {:type "string" :index "not_analyzed"}
+    					:thumbnail_url_2_3 {:type "string" :index "not_analyzed"}
+    					:thumbnail_url_7_10 {:type "string" :index "not_analyzed"}
+    					:thumbnail_url_10_3 {:type "string" :index "not_analyzed"}
+    					:thumbnail_url_10_4 {:type "string" :index "not_analyzed"}
+    					:thumbnail_url_16_9 {:type "string" :index "not_analyzed"}
+              :slug {:type "string" :index "not_analyzed"}}}}}
+          :dek {:type "string"}
+          :episode {:properties {:id {:type "string" :index "not_analyzed"}
+            :season {:properties {:id {:type "string" :index "not_analyzed"}
+              :show {:properties {:id {:type "string" :index "not_analyzed"}
+                :original_id {:type "string" :index "not_analyzed"}
+                :primary_topic {:properties {:id {:type "string" :index "not_analyzed"}
+                  :name {:type "string"}
+                  :slug {:type "string" :index "not_analyzed"}}}
+                :slug {:type "string" :index "not_analyzed"}
+                :thumbnail_url {:type "string" :index "not_analyzed"}
+                :thumbnail_url_1_1 {:type "string" :index "not_analyzed"}
+                :thumbnail_url_2_3 {:type "string" :index "not_analyzed"}
+                :thumbnail_url_7_10 {:type "string" :index "not_analyzed"}
+                :thumbnail_url_10_3 {:type "string" :index "not_analyzed"}
+                :thumbnail_url_10_4 {:type "string" :index "not_analyzed"}
+                :thumbnail_url_16_9 {:type "string" :index "not_analyzed"}
+                :topics {:properties {:id {:type "string" :index "not_analyzed"}
+                  :name {:type "string"}
+                  :slug {:type "string" :index "not_analyzed"}}}
+                :url {:type "string" :index "not_analyzed"}}}}}}}
+          :id {:type "string" :index "not_analyzed"}
+          :locale {:type "string" :index "not_analyzed"}
+          :primary_topic {:properties {:id {:type "string" :index "not_analyzed"}
+            :name {:type "string"}
+            :slug {:type "string" :index "not_analyzed"}}}
+          :rating {:type "string" :index "not_analyzed"}
+          :slug {:type "string" :index "not_analyzed"}
+          :summary {:type "string"}
+          :topics {:properties {:id {:type "string" :index "not_analyzed"}
+            :name {:type "string"}
+            :slug {:type "string" :index "not_analyzed"}}}
+          :title {:type "string"}
+          :title-analyze {:type "string" :analyzer "snowball"}
+          :thumbnail_url {:type "string" :index "not_analyzed"}
+          :thumbnail_url_1_1 {:type "string" :index "not_analyzed"}
+          :thumbnail_url_2_3 {:type "string" :index "not_analyzed"}
+          :thumbnail_url_7_10 {:type "string" :index "not_analyzed"}
+          :thumbnail_url_10_3 {:type "string" :index "not_analyzed"}
+          :thumbnail_url_10_4 {:type "string" :index "not_analyzed"}
+          :thumbnail_url_16_9 {:type "string" :index "not_analyzed"}
+          :url {:type "string" :index "not_analyzed"}
+          :vms_id {:type "string" :index "not_analyzed"}}}}]
     (create-index cluster index-name {:mappings mapping-types})))
 
-(defn insert-articles [articles]
+; (defn insert-articles [articles]
+;   (let [cluster (esr/connect "http://127.0.0.1:9200")
+;         index-name "vice"]
+;     (map #(insert :articles cluster index-name (assoc % :title-analyze (:title %)) :id) articles)))
+
+(defn insert-items [items]
   (let [cluster (esr/connect "http://127.0.0.1:9200")
         index-name "vice"]
-    (map #(insert :articles cluster index-name (assoc % :title-analyze (:title %)) :id) articles)))
+    (map #(insert :items cluster index-name (assoc % :title-analyze (:title %)) :id) items)))

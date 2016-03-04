@@ -28,8 +28,14 @@
          (rr/response {:result cluster-response})))
   (GET "/cluster-test/insert_articles.json" []
        (let [articles (api/api-get-all :articles)
-             cluster-response (cluster/insert-articles articles)]
+             cluster-response (cluster/insert-items articles)]
          (rr/response {:result cluster-response})))
+  (GET "/cluster-test/insert_videos.json" []
+       (let [videos (api/api-get-all :videos)
+             cluster-response (cluster/insert-items videos)]
+         (rr/response {:result cluster-response})))
+  (GET "/search.json" [q]
+    (rr/response {:results (query/item-query q)}))
   (GET "/search_articles.json" [q]
     (rr/response {:results (query/article-query q)}))
   (GET "/search_topics.json" [q]
