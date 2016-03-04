@@ -99,6 +99,13 @@
           :vms_id {:type "string" :index "not_analyzed"}}}}]
     (create-index cluster index-name {:mappings mapping-types})))
 
-(defn insert-items [items]
+(defn insert-items
+  [item-type items]
   (let [cluster (esr/connect cluster-url)]
-    (map #(insert :items cluster index-name (assoc % :title-analyze (:title %)) :id) items)))
+    (map
+      #(insert :items
+         cluster
+         index-name
+         (assoc % :title-analyze (:title %) :type (name item-type))
+         :id)
+      items)))
