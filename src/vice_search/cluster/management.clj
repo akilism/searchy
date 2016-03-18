@@ -44,7 +44,7 @@
             :contributor {:properties {:id {:type "string" :index "not_analyzed"}
               :first_name {:type "string" :index "not_analyzed"}
               :last_name {:type "string" :index "not_analyzed"}
-              :full_name {:type "string" :index "not_analyzed"}
+              :full_name {:type "string"}
               :twitter_username {:type "string" :index "not_analyzed"}
               :public_url {:type "string" :index "not_analyzed"}
               :thumbnail_url {:type "string" :index "not_analyzed"}
