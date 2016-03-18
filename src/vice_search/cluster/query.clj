@@ -21,8 +21,10 @@
 
 (defmethod build-query :look-ahead
   [_ field query-term]
-  {:bool {:should [{:match_phrase_prefix {field {:query query-term :boost 1}}}
-                   {:match_phrase_prefix {:topics.name {:query query-term}}}]}}
+  {:bool {:should [{:match_phrase_prefix {:title-analyze {:query query-term :boost 1}}}
+                   {:match_phrase_prefix {:topics.name {:query query-term}}}
+                   {:match_phrase_prefix {:contributions.contributor.full_name {:query query-term}}}
+                   {:match_phrase_prefix {:episode.season.show.title {:query query-term}}}]}}
   )
 
 (defn query
