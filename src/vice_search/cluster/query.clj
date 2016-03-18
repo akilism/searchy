@@ -26,8 +26,7 @@
                    {:match_phrase_prefix {:contributions.contributor.full_name {:query query-term :boost 1.5}}}
                    {:match_phrase_prefix {:episode.season.show.title {:query query-term :boost 2}}}
                    {:match_phrase_prefix {:dek {:query query-term}}}
-                   {:match_phrase_prefix {:summary {:query query-term}}}]}}
-  )
+                   {:match_phrase_prefix {:summary {:query query-term}}}]}})
 
 (defn query
 	[query-type type field query-term]
