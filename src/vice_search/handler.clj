@@ -40,8 +40,10 @@
     (rr/response {:results (query/article-query q)}))
   (GET "/search_topics.json" [q]
     (rr/response {:results (query/topic-query q)}))
-   (GET "/search_contributors.json" [q]
+  (GET "/search_contributors.json" [q]
     (rr/response {:results (query/contributor-query q)}))
+  (GET "/look_ahead.json" [q]
+    (rr/response {:results (query/look-ahead-query q)}))
   (route/not-found "Not Found"))
 
 (def app
